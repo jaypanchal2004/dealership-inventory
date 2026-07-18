@@ -7,6 +7,7 @@ from app.services.vehicle_service import (
     create_vehicle,
     delete_vehicle,
     list_vehicles,
+    search_vehicles,
     update_vehicle,
 )
 
@@ -28,6 +29,18 @@ def _to_response(vehicle: Vehicle) -> VehicleResponse:
 async def create(data: VehicleCreateRequest, _=Depends(get_current_user)):
     vehicle = await create_vehicle(data)
     return _to_response(vehicle)
+
+@router.get("/search", response_model=list[VehicleResponse])
+async def search(
+    make: str | None = None,
+    model: str | None = None,
+    category: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+    _=Depends(get_current_user),
+):
+    vehicles = await search_vehicles(make, model, category, min_price, max_price)
+    return [_to_response(v) for v in vehicles]
 
 
 @router.get("", response_model=list[VehicleResponse])

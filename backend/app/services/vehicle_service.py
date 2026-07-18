@@ -14,6 +14,31 @@ async def create_vehicle(data: VehicleCreateRequest) -> Vehicle:
 async def list_vehicles() -> list[Vehicle]:
     return await Vehicle.find_all().to_list()
 
+async def search_vehicles(
+    make: str | None = None,
+    model: str | None = None,
+    category: str | None = None,
+    min_price: float | None = None,
+    max_price: float | None = None,
+) -> list[Vehicle]:
+    query: dict = {}
+
+    if make:
+        query["make"] = {"$regex": f"^{make}$", "$options": "i"}
+    if model:
+        query["model"] = {"$regex": f"^{model}$", "$options": "i"}
+    if category:
+        query["category"] = {"$regex": f"^{category}$", "$options": "i"}
+    if min_price is not None or max_price is not None:
+        price_filter = {}
+        if min_price is not None:
+            price_filter["$gte"] = min_price
+        if max_price is not None:
+            price_filter["$lte"] = max_price
+        query["price"] = price_filter
+
+    return await Vehicle.find(query).to_list()
+
 
 async def get_vehicle_or_404(vehicle_id: str) -> Vehicle:
     try:
