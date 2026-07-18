@@ -2,11 +2,18 @@ from fastapi import APIRouter, Depends, status
 
 from app.core.deps import get_current_user, require_admin
 from app.models.vehicle import Vehicle
-from app.schemas.vehicle import VehicleCreateRequest, VehicleResponse, VehicleUpdateRequest
+from app.schemas.vehicle import (
+    RestockRequest,
+    VehicleCreateRequest,
+    VehicleResponse,
+    VehicleUpdateRequest,
+)
 from app.services.vehicle_service import (
     create_vehicle,
     delete_vehicle,
     list_vehicles,
+    purchase_vehicle,
+    restock_vehicle,
     search_vehicles,
     update_vehicle,
 )
@@ -58,3 +65,15 @@ async def update(vehicle_id: str, data: VehicleUpdateRequest, _=Depends(get_curr
 @router.delete("/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete(vehicle_id: str, _=Depends(require_admin)):
     await delete_vehicle(vehicle_id)
+
+
+@router.post("/{vehicle_id}/purchase", response_model=VehicleResponse)
+async def purchase(vehicle_id: str, _=Depends(get_current_user)):
+    vehicle = await purchase_vehicle(vehicle_id)
+    return _to_response(vehicle)
+
+
+@router.post("/{vehicle_id}/restock", response_model=VehicleResponse)
+async def restock(vehicle_id: str, data: RestockRequest, _=Depends(require_admin)):
+    vehicle = await restock_vehicle(vehicle_id, data.quantity)
+    return _to_response(vehicle)

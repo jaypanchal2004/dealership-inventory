@@ -24,3 +24,6 @@ class VehicleResponse(BaseModel):
     category: str
     price: float
     quantity: int
+
+class RestockRequest(BaseModel):
+    quantity: int = Field(gt=0)

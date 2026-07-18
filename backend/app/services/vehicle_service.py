@@ -1,3 +1,4 @@
+from beanie.operators import Inc
 from beanie import PydanticObjectId
 from fastapi import HTTPException, status
 
@@ -67,3 +68,26 @@ async def update_vehicle(vehicle_id: str, data: VehicleUpdateRequest) -> Vehicle
 async def delete_vehicle(vehicle_id: str) -> None:
     vehicle = await get_vehicle_or_404(vehicle_id)
     await vehicle.delete()
+
+
+async def purchase_vehicle(vehicle_id: str) -> Vehicle:
+    vehicle = await get_vehicle_or_404(vehicle_id)
+    if vehicle.quantity <= 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Vehicle is out of stock",
+        )
+
+    # Atomic decrement guarded by quantity > 0 — protects against a race
+    # where two concurrent purchases both pass the check above but only
+    # one should actually succeed in reducing stock.
+    await Vehicle.find_one(Vehicle.id == vehicle.id, Vehicle.quantity > 0).update(
+        Inc({Vehicle.quantity: -1})
+    )
+    return await get_vehicle_or_404(vehicle_id)
+
+
+async def restock_vehicle(vehicle_id: str, quantity: int) -> Vehicle:
+    vehicle = await get_vehicle_or_404(vehicle_id)
+    await vehicle.update(Inc({Vehicle.quantity: quantity}))
+    return await get_vehicle_or_404(vehicle_id)
