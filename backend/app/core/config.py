@@ -1,3 +1,4 @@
+from pathlib import Path
 from pydantic_settings import BaseSettings
 
 
@@ -16,7 +17,10 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24  # 24 hours
 
     class Config:
-        env_file = ".env"
+        # Absolute path, independent of the current working directory the
+        # app happens to be launched from. Adjust the number of .parent
+        # calls if this file moves relative to the project root.
+        env_file = Path(__file__).resolve().parent.parent.parent / ".env"
 
 
 settings = Settings()
