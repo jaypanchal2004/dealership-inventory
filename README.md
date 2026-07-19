@@ -2,7 +2,7 @@
 # Car Dealership Inventory System
 
 **[Live Demo](https://dealership-inventory-git-master-jaypanchal202223-3845s-projects.vercel.app/login)**
-
+(he backend is hosted on Render's free tier. If the API has been inactive, the very first login/data request may take 30-50 seconds to wake the server. If it times out, simply click submit again!)
 A full-stack inventory management system...
 
 
