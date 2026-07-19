@@ -1,3 +1,11 @@
+
+# Car Dealership Inventory System
+
+**[Live Demo](https://dealership-inventory-git-master-jaypanchal202223-3845s-projects.vercel.app/login)**
+
+A full-stack inventory management system...
+
+
 # Car Dealership Inventory System
 
 A full-stack inventory management system for a car dealership, with role-based access control: admins manage inventory (add, update, delete, restock), while customers can browse, search, and purchase vehicles.
