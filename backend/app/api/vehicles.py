@@ -33,9 +33,10 @@ def _to_response(vehicle: Vehicle) -> VehicleResponse:
 
 
 @router.post("", response_model=VehicleResponse, status_code=status.HTTP_201_CREATED)
-async def create(data: VehicleCreateRequest, _=Depends(get_current_user)):
+async def create(data: VehicleCreateRequest, _=Depends(require_admin)):
     vehicle = await create_vehicle(data)
     return _to_response(vehicle)
+
 
 @router.get("/search", response_model=list[VehicleResponse])
 async def search(
@@ -57,7 +58,7 @@ async def list_all(_=Depends(get_current_user)):
 
 
 @router.put("/{vehicle_id}", response_model=VehicleResponse)
-async def update(vehicle_id: str, data: VehicleUpdateRequest, _=Depends(get_current_user)):
+async def update(vehicle_id: str, data: VehicleUpdateRequest, _=Depends(require_admin)):
     vehicle = await update_vehicle(vehicle_id, data)
     return _to_response(vehicle)
 
