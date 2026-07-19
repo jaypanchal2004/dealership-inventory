@@ -36,27 +36,27 @@ function VehicleForm({ initial, onSubmit, onCancel, submitLabel }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow border border-gray-200 space-y-3">
+    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow border border-amber-200 space-y-3">
       {error && <p className="bg-red-100 text-red-700 text-sm p-2 rounded">{error}</p>}
       <div className="grid grid-cols-2 gap-3">
         <input required placeholder="Make" value={make} onChange={(e) => setMake(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2" />
+          className="border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d97706]" />
         <input required placeholder="Model" value={model} onChange={(e) => setModel(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2" />
+          className="border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d97706]" />
         <input required placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2" />
+          className="border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d97706]" />
         <input required type="number" min="0.01" step="0.01" placeholder="Price" value={price}
-          onChange={(e) => setPrice(e.target.value)} className="border border-gray-300 rounded px-3 py-2" />
+          onChange={(e) => setPrice(e.target.value)} className="border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d97706]" />
         <input required type="number" min="0" placeholder="Quantity" value={quantity}
-          onChange={(e) => setQuantity(e.target.value)} className="border border-gray-300 rounded px-3 py-2" />
+          onChange={(e) => setQuantity(e.target.value)} className="border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#d97706]" />
       </div>
       <div className="flex gap-2">
         <button type="submit" disabled={saving}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50">
+          className="bg-[#d97706] text-white px-4 py-2 rounded hover:bg-amber-700 disabled:opacity-50 font-medium transition-colors">
           {saving ? 'Saving...' : submitLabel}
         </button>
         <button type="button" onClick={onCancel}
-          className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+          className="bg-slate-200 text-slate-700 px-4 py-2 rounded hover:bg-slate-300 font-medium">
           Cancel
         </button>
       </div>
