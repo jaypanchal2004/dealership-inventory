@@ -6,18 +6,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import auth, vehicles
 from app.core.database import init_db
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
 
-
 app = FastAPI(title="Car Dealership Inventory API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"], # Changed this to allow all origins!
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
