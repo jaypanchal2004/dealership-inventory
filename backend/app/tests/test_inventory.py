@@ -8,11 +8,11 @@ class TestPurchaseVehicle:
         assert response.status_code == 401
 
     @pytest.mark.asyncio
-    async def test_purchase_decreases_quantity_by_one(self, client, customer_headers):
+    async def test_purchase_decreases_quantity_by_one(self, client, admin_headers, customer_headers):
         create = await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         vehicle_id = create.json()["id"]
 
@@ -22,11 +22,11 @@ class TestPurchaseVehicle:
         assert response.json()["quantity"] == 2
 
     @pytest.mark.asyncio
-    async def test_purchase_with_zero_stock_returns_400(self, client, customer_headers):
+    async def test_purchase_with_zero_stock_returns_400(self, client, admin_headers, customer_headers):
         create = await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 0},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         vehicle_id = create.json()["id"]
 
@@ -45,11 +45,11 @@ class TestPurchaseVehicle:
 
 class TestRestockVehicle:
     @pytest.mark.asyncio
-    async def test_customer_cannot_restock(self, client, customer_headers):
+    async def test_customer_cannot_restock(self, client, admin_headers, customer_headers):
         create = await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         vehicle_id = create.json()["id"]
 
@@ -62,11 +62,11 @@ class TestRestockVehicle:
         assert response.status_code == 403
 
     @pytest.mark.asyncio
-    async def test_admin_can_restock(self, client, customer_headers, admin_headers):
+    async def test_admin_can_restock(self, client, admin_headers):
         create = await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         vehicle_id = create.json()["id"]
 
@@ -80,11 +80,11 @@ class TestRestockVehicle:
         assert response.json()["quantity"] == 8
 
     @pytest.mark.asyncio
-    async def test_restock_with_negative_quantity_returns_422(self, client, admin_headers, customer_headers):
+    async def test_restock_with_negative_quantity_returns_422(self, client, admin_headers):
         create = await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         vehicle_id = create.json()["id"]
 

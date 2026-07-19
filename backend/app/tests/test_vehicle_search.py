@@ -8,16 +8,16 @@ class TestSearchVehicles:
         assert response.status_code == 401
 
     @pytest.mark.asyncio
-    async def test_search_by_make_is_case_insensitive(self, client, customer_headers):
+    async def test_search_by_make_is_case_insensitive(self, client, admin_headers, customer_headers):
         await client.post(
             "/api/vehicles",
             json={"make": "Toyota", "model": "Corolla", "category": "Sedan", "price": 22000, "quantity": 5},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
 
         response = await client.get("/api/vehicles/search?make=toyota", headers=customer_headers)
@@ -28,16 +28,16 @@ class TestSearchVehicles:
         assert results[0]["make"] == "Toyota"
 
     @pytest.mark.asyncio
-    async def test_search_by_category(self, client, customer_headers):
+    async def test_search_by_category(self, client, admin_headers, customer_headers):
         await client.post(
             "/api/vehicles",
             json={"make": "Ford", "model": "F-150", "category": "Truck", "price": 35000, "quantity": 2},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
 
         response = await client.get("/api/vehicles/search?category=truck", headers=customer_headers)
@@ -48,16 +48,16 @@ class TestSearchVehicles:
         assert results[0]["category"] == "Truck"
 
     @pytest.mark.asyncio
-    async def test_search_by_price_range(self, client, customer_headers):
+    async def test_search_by_price_range(self, client, admin_headers, customer_headers):
         await client.post(
             "/api/vehicles",
             json={"make": "Honda", "model": "Civic", "category": "Sedan", "price": 21000, "quantity": 3},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         await client.post(
             "/api/vehicles",
             json={"make": "Ford", "model": "F-150", "category": "Truck", "price": 35000, "quantity": 2},
-            headers=customer_headers,
+            headers=admin_headers,
         )
 
         response = await client.get(
@@ -77,16 +77,16 @@ class TestSearchVehicles:
         assert response.json() == []
 
     @pytest.mark.asyncio
-    async def test_search_combines_multiple_filters(self, client, customer_headers):
+    async def test_search_combines_multiple_filters(self, client, admin_headers, customer_headers):
         await client.post(
             "/api/vehicles",
             json={"make": "Toyota", "model": "Corolla", "category": "Sedan", "price": 22000, "quantity": 5},
-            headers=customer_headers,
+            headers=admin_headers,
         )
         await client.post(
             "/api/vehicles",
             json={"make": "Toyota", "model": "Camry", "category": "Sedan", "price": 27000, "quantity": 4},
-            headers=customer_headers,
+            headers=admin_headers,
         )
 
         response = await client.get(
